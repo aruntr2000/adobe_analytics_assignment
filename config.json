@@ -1,7 +1,0 @@
-{
-  "s3_bucket_name" : "adobe-hit-level-data-storage",
-  "s3_filename" : "input/data.tsv",
-  "function_name" : "data_processing_serverless_lambda",
-  "iam_role_arn" : "arn:aws:iam::457180471489:role/lambda_execution_role",
-  "layer_arn" : "arn:aws:lambda:us-east-1:457180471489:layer:data_engg_py37_layer:1"
-}
