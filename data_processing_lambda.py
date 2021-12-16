@@ -84,7 +84,12 @@ class AdobeAnalytics:
         # write tab delimited output file dropping index
         wr.s3.to_csv(output_df, path=f's3://{self.s3_bucket}/output/{dte}_SearchKeywordPerformance.tab', sep='\t', index=False)
 
+        return output_df
+
 
 def lambda_handler(event, context):
-    # create object and execute the function
-    AdobeAnalytics('adobe-hit-level-data-storage', 'input/data.tsv').calculate_revenue()
+    for record in event['Records']:
+        s3_bucket = record['s3']['bucket']['name']
+        s3_file = record['s3']['object']['key']
+        # create object and execute the function
+        AdobeAnalytics(s3_bucket, s3_file).calculate_revenue()

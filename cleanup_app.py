@@ -1,6 +1,7 @@
 import os
 import boto3
 from botocore.exceptions import ClientError
+import json
 
 s3Client = boto3.client('s3')
 s3 = boto3.resource('s3')
@@ -30,7 +31,7 @@ def delete_lambda_if_exists(function_name):
     
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            print("Lambda does not exist")
+            print(f'Lambda does not exist: {function_name}')
         else:
             print(e.response['Error']['Code'])
             print("Unexpected error: %s" % e)
@@ -39,9 +40,12 @@ def delete_lambda_if_exists(function_name):
         
         
 def main():
-    bucket_name = 'hit-level-data-storage'
-    function_name = 'data_processing_serverless_lambda'
-    
+    with open('config.json') as f:
+        config_env = json.load(f)
+
+    bucket_name = config_env['s3_bucket_name']
+    function_name = config_env['function_name']
+
     # delete s3 bucket for hit level data storage
     delete_s3_bucket_if_exists(bucket_name)
     

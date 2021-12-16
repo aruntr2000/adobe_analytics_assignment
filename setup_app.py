@@ -1,3 +1,4 @@
+import json
 import zipfile
 import boto3
 from botocore.exceptions import ClientError
@@ -141,11 +142,14 @@ def upload_file_to_s3_bucket(bucket_name, filename):
     
     
 def main():
-    bucket_name = 'adobe-hit-level-data-storage'
-    function_name = 'data_processing_serverless_lambda'
-    iam_role_arn = 'arn:aws:iam::457180471489:role/lambda_execution_role'
-    layer_arn = 'arn:aws:lambda:us-east-1:457180471489:layer:data_engg_py37_layer:1'
-    filename = 'input/data.tsv'
+    with open('config.json') as f:
+        config_env = json.load(f)
+
+    bucket_name = config_env['s3_bucket_name']
+    filename = config_env['s3_filename']
+    function_name = config_env['function_name']
+    iam_role_arn = config_env['iam_role_arn']
+    layer_arn = config_env['layer_arn']
     
     # create s3 bucket for hit level data storage
     create_s3_bucket_if_not_exists(bucket_name)
